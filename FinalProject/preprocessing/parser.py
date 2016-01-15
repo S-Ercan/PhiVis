@@ -11,23 +11,27 @@ def getPHIBaseEntries():
 	entries = []
 
 	for child in root:
+		recordIdEl = child.find("Record_ID")
+		geneEl = child.find("Gene_name")
+		pathogenSpeciesEl = child.find("Pathogen_species")
+		diseaseEl = child.find("Disease_name")
+		hostSpeciesEl = child.find("Experimental_host_species")
+		mutantPhenotypeEl = child.find("Phenotype_of_mutant")
+
 		entry = {
-			"RecordId": child.find("Record_ID").text,
-			"Gene": child.find("Gene_name").text,
-			"PathogenSpecies": child.find("Pathogen_species").text,
-			"Disease": child.find("Disease_name").text,
-			"HostSpecies": child.find("Experimental_host_species").text,
-			"MutantPhenotype": child.find("Phenotype_of_mutant").text
+			"RecordId": recordIdEl.text if recordIdEl is not None else "",
+			"Gene": geneEl.text if geneEl is not None else "",
+			"PathogenSpecies": pathogenSpeciesEl.text if pathogenSpeciesEl is not None else "",
+			"Disease": diseaseEl.text if diseaseEl is not None else "",
+			"HostSpecies": hostSpeciesEl.text if hostSpeciesEl is not None else "",
+			"MutantPhenotype": mutantPhenotypeEl.text if mutantPhenotypeEl is not None else ""
 		}
 		entries.append(entry)
-		break
 	return entries
 
 def writeToJSON(entries):
 	""" Writes the given list of death details to a JSON file.
 	"""
-	for entry in entries:
-		print(entry)
 	with open('../Visualization/phi.json', 'w') as outfile:
     		json.dump(entries, outfile)
 
