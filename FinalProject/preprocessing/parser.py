@@ -1,15 +1,20 @@
 import xml.etree.ElementTree as ET
 import json
 
+inputFile = '../Data/PHI_accessions.xml'
+outputFile = '../Visualization/phi.json'
+
 def getPHIBaseEntries():
 	""" Processes XML entries in Data/PHI_accessions.xml.
 		For each entry, outputs:
 			RecordId, Gene, PathogenSpecies, Disease, HostSpecies, MutantPhenotype
 	"""
-	tree = ET.parse('../Data/PHI_accessions.xml')
+	print("Reading data from '{:s}'...".format(inputFile))
+	tree = ET.parse(inputFile)
 	root = tree.getroot();
 	entries = []
 
+	print("Processing {:d} entries...".format(len(root)))
 	for child in root:
 		recordIdEl = child.find("Record_ID")
 		geneEl = child.find("Gene_name")
@@ -32,7 +37,8 @@ def getPHIBaseEntries():
 def writeToJSON(entries):
 	""" Writes the given list of death details to a JSON file.
 	"""
-	with open('../Visualization/phi.json', 'w') as outfile:
+	print("Writing output to '{:s}'...".format(outputFile))
+	with open(outputFile, 'w') as outfile:
     		json.dump(entries, outfile)
 
 if __name__ == "__main__":
