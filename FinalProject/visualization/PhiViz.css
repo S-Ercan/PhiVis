@@ -21,5 +21,8 @@ body
 
 .mainMenu
 {
+	height: 750px;
+	width: 500px;
+	float: left;
 	border-right: thick solid #ff0000;
 }

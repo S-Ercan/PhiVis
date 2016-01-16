@@ -1,20 +1,6 @@
-// Populates dropdown with data
-function populateOverview(options)
+$(function()
 {
-	var dropDown = document.getElementsByName('diseaseOverview')[0];
-
-	for(var i = 0; i < options.length; i++)
-	{
-		var opt = options[i];
-		var optionElement = document.createElement(opt);
-		optionElement.textContent = opt;
-		optionElement.value = opt;
-		dropDown.appendChild(optionElement);
-	}
-}
-
-// Handles clicks on diseases
-function selectDisease(disease)
-{
-	
-}
+	var ms1 = $('#overview').magicSuggest({
+	  data: ['New York','Los Angeles','Chicago','Houston','Philadelphia','Phoenix','San Antonio','San Diego','Dallas','San Jose','Jacksonville']
+	});
+});

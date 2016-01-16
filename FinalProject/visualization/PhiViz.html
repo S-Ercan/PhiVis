@@ -3,7 +3,16 @@
   <head>
     <title>PhiViz</title>
     <link rel="stylesheet" href="PhiViz.css"/>
-    <script type="text/javascript" src="d3/d3.js" charset="UTF-8"></script>
+	<link rel="stylesheet" href="third-party/bootstrap/bootstrap.min.css" />
+	<link rel="stylesheet" href="third-party/jquery-ui/jquery-ui.min.css" />
+
+	<script type="text/javascript" src="d3/d3.js" charset="UTF-8"></script>
+
+	<script src="third-party/jquery.min.js"></script>
+	<script src="third-party/jquery-ui/jquery-ui.min.js"></script>
+	<script src="third-party/bootstrap/bootstrap.min.js"></script>
+	<script src="third-party/magicsuggest/magicsuggest-min.js"></script>
+	<script src="third-party/jtable/jquery.jtable.min.js"></script>
   </head>
   <body>
 
@@ -15,10 +24,7 @@
 
     <div id="mainMenu">
 
-      <div id="overview">
-        <select name="diseaseOverview">
-          <option>Diseases</option>
-        </select>
+      <div id="overview" class="form-control">
   		</div>
 
       <div id="selectedOverview">
@@ -28,6 +34,8 @@
       <button onclick="forceGraph()">Force Graph</button>
 
     </div>
+
     <script type="text/javascript" src="PhiViz.js"></script>
+    <script type="text/javascript" src="DiseaseOverview.js"></script>
   </body>
 </html>
