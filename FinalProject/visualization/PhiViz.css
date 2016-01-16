@@ -5,9 +5,10 @@ body
 
 #graphViz
 {
+	position: static;
 	float: right;
 	height: 750px;
-	width: 1000px;
+	width: 900px;
 	background-color: white;
 }
 
@@ -16,5 +17,5 @@ body
 	height: 750px;
 	width: 500px;
 	float: left;
-	border-right: thick solid #ff0000;
+	border-right: thin solid rgba(255, 255, 255, 0.64);
 }
