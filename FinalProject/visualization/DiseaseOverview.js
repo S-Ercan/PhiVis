@@ -1,8 +1,7 @@
 // Populates dropdown with data
-function populateOverview()
+function populateOverview(options)
 {
-	var dropDown = document.getElementById('');
-	var options = [];
+	var dropDown = document.getElementsByName('diseaseOverview')[0];
 
 	for(var i = 0; i < options.length; i++)
 	{
@@ -15,7 +14,7 @@ function populateOverview()
 }
 
 // Handles clicks on diseases
-function selectDisease()
+function selectDisease(disease)
 {
 	
 }

@@ -1,11 +1,11 @@
 // Adds disease to list of selected diseases
-function addDisease()
+function addDisease(disease)
 {
 	
 }
 
 // Removes disease from list of selected diseases
-function removeDisease()
+function removeDisease(disease)
 {
 		
 }
