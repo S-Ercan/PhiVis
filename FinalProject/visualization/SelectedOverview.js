@@ -1,21 +1,34 @@
 $(document).ready(function () {
-	$('#selectedOverview').jtable({
+	var selectedOverview = $('#selectedOverview').jtable({
 		title: 'Selected diseases',
+		addRecordButton: {click: null},
 		actions: {
-			listAction: '/GettingStarted/PersonList',
-			createAction: '/GettingStarted/CreatePerson',
-			updateAction: '/GettingStarted/UpdatePerson',
-			deleteAction: '/GettingStarted/DeletePerson'
+			deleteAction: function(data) {
+				$('#selectedOverview').jtable('deleteRecord', {
+					key: data.DiseaseId,
+					clientOnly: true
+				});
+			}
 		},
 		fields: {
-			PersonId: {
+			DiseaseId: {
 				key: true,
 				list: false
 			},
-			Name: {
-				title: 'Disease',
-				width: '40%'
+			Disease: {
+				title: 'Disease'
 			}
 		}
 	});
+	addDisease({DiseaseId: 1, Disease: 'X'});
 });
+
+function addDisease(disease)
+{
+	$('#selectedOverview').jtable('addRecord', {
+		record: {
+			DiseaseId: 1, Disease: 'X'
+		},
+		clientOnly: true
+	});
+}
