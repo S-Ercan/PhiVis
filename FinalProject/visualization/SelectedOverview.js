@@ -1,5 +1,5 @@
 $(document).ready(function () {
-	var selectedOverview = $('#selectedOverview').jtable({
+	$('#selectedOverview').jtable({
 		title: 'Selected diseases',
 		addRecordButton: {click: null},
 		deleteConfirmation: false,
