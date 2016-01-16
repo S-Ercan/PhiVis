@@ -1,6 +1,0 @@
-15/1/2016 -> ~~ Both ~~
-			 Formulated visualization goals
-			 Examined the dataset to find proper elements for visualization
-			 Created a draft of the visualizations
-			 Created a plan for the project objectives
-			 Separated the workload
