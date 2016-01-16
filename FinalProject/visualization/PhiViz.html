@@ -6,14 +6,28 @@
     <script type="text/javascript" src="d3/d3.js" charset="UTF-8"></script>
   </head>
   <body>
+
     <div id="forceGraph">
 		</div>
 
     <div id="stackBars">
 		</div>
 
-    <button onclick="forceGraph()">Stack Bars</button>
-    <button onclick="forceGraph()">Force Graph</button>
+    <div id="mainMenu">
+
+      <div id="overview">
+        <select name="diseaseOverview">
+          <option>Diseases</option>
+        </select>
+  		</div>
+
+      <div id="selectedOverview">
+  		</div>
+
+      <button onclick="stackBars()">Stack Bars</button>
+      <button onclick="forceGraph()">Force Graph</button>
+
+    </div>
     <script type="text/javascript" src="PhiViz.js"></script>
   </body>
 </html>
