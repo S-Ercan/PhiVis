@@ -27,6 +27,10 @@ loadJSON(function(response)
 		  data: selectedDiseases,
 		  placeholder: 'Diseases...'
 		});
+		
+		$(ms1).on('selectionchange', function(e, m) {
+			ms1.setSelection([]);
+		});
 	});
 
 });
