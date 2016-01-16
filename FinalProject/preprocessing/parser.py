@@ -17,6 +17,7 @@ def getPHIBaseEntries():
 	print("Processing {:d} entries...".format(len(root)))
 	for child in root:
 		recordIdEl = child.find("Record_ID")
+		phiMolConnIdEl = child.find("PHI_MolConn_ID")
 		geneEl = child.find("Gene_name")
 		pathogenSpeciesEl = child.find("Pathogen_species")
 		diseaseEl = child.find("Disease_name")
@@ -24,7 +25,7 @@ def getPHIBaseEntries():
 		mutantPhenotypeEl = child.find("Phenotype_of_mutant")
 
 		entry = {
-			"RecordId": recordIdEl.text if recordIdEl is not None else "",
+			"Identifier": recordIdEl.text if recordIdEl is not None else phiMolConnIdEl.text if phiMolConnIdEl is not None else "",
 			"Gene": geneEl.text if geneEl is not None else "",
 			"PathogenSpecies": pathogenSpeciesEl.text if pathogenSpeciesEl is not None else "",
 			"Disease": diseaseEl.text if diseaseEl is not None else "",
@@ -39,7 +40,7 @@ def writeToJSON(entries):
 	"""
 	print("Writing output to '{:s}'...".format(outputFile))
 	with open(outputFile, 'w') as outfile:
-    		json.dump(entries, outfile)
+    		json.dump(entries, outfile, separators=(',\n', ': '))
 
 if __name__ == "__main__":
 	entries = getPHIBaseEntries()
