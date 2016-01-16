@@ -13,8 +13,22 @@ function loadJSON(callback)
 
 loadJSON(function(response)
 {
-	var diseases = JSON.parse(response);
-	console.log(diseases);
+	var phi = JSON.parse(response);
+	var selectedDiseases = [];
+
+	for (var i = 0; i < phi.length; i++) {
+		selectedDiseases.push({id: phi[i].Identifier, name: phi[i].Disease});
+	}
+	console.log(selectedDiseases);
+
+	$(function()
+	{
+		var ms1 = $('#overview').magicSuggest({
+		  data: selectedDiseases,
+		  placeholder: 'Diseases...'
+		});
+	});
+
 });
 
 function forceGraph() {
