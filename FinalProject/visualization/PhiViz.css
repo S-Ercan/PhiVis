@@ -18,3 +18,9 @@ body
 	float: left;
 	border-right: thick solid #ff0000;
 }
+
+#overview
+{
+	height: 200px;
+	width: 400px;
+}
