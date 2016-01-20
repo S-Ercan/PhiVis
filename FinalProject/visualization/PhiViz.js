@@ -27,22 +27,34 @@ loadJSON(function(response)
 		}
 
 	}
-	console.log(diseases);
 
-	//var diseaseNames = diseases.keys();
 	$(function()
 	{
-		var ms1 = $('#overview').magicSuggest({
-		  data: Object.keys(diseases),
-		  placeholder: 'Diseases...'
+		var ms = $('#overview').magicSuggest({
+			allowFreeEntries: false,
+			data: Object.keys(diseases),
+			placeholder: 'Diseases...'
 		});
 
-		$(ms1).on('selectionchange', function(e, m) {
-			ms1.setSelection([]);
+		$(ms).on('selectionchange', function(e, m, records) {
+			if(records.length > 0)
+			{
+				addDisease(records[0]);
+				ms.setSelection([]);	
+			}
 		});
 	});
-
 });
+
+function addDisease(disease)
+{
+	$('#selectedOverview').jtable('addRecord', {
+		record: {
+			DiseaseId: disease.id, Disease: disease.name
+		},
+		clientOnly: true
+	});
+}
 
 function forceGraph() {
 
