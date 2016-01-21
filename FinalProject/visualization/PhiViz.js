@@ -95,7 +95,7 @@ function stackBars(diseases) {
 
 	var margin = {top: 20, right: 20, bottom: 30, left: 50},
     width = 900 - margin.left - margin.right,
-    height = 500 - margin.top - margin.bottom;
+    height = 700 - margin.top - margin.bottom;
 
 	var x = d3.scale.ordinal()
 		.rangeRoundBands([0, width], .1);
@@ -114,12 +114,21 @@ function stackBars(diseases) {
 		.scale(y)
 		.orient("left")
 		.tickFormat(d3.format(".2s"));
+		
+	var tip = d3.tip()
+		.attr('class', 'd3-tip')
+		.offset([25, 0])
+		.html(function(d) {
+			return "<strong>Gene:</strong> <span style='color:red'>" + d.gene + "</span>";
+		});
 
 	var svg = d3.select("#graphViz").append("svg")
 		.attr("width", width + margin.left + margin.right)
 		.attr("height", height + margin.top + margin.bottom)
 		.append("g")
 		.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+	svg.call(tip);
 
 	color.domain(genes);
 
@@ -163,7 +172,9 @@ function stackBars(diseases) {
 		.attr("width", x.rangeBand())
 		.attr("y", function(d) { return y(d.y1); })
 		.attr("height", function(d) { return y(d.y0) - y(d.y1); })
-		.style("fill", function(d) { return color(d.gene); });
+		.style("fill", function(d) { return color(d.gene); })
+		.on('mouseover', tip.show)
+		.on('mouseout', tip.hide);
 
 	var legend = svg.selectAll(".legend")
 		.data(color.domain().slice().reverse())
