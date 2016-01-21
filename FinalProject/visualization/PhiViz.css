@@ -9,7 +9,7 @@ body
 	float: right;
 	height: 750px;
 	width: 900px;
-	background-color: white;
+	background-color: rgb(207, 214, 210);
 }
 
 #mainMenu
@@ -23,4 +23,15 @@ body
 #overview
 {
 	background-color: rgba(238, 230, 224, 0.78);
+}
+
+.node {
+    fill: #ccc;
+    stroke: #fff;
+    stroke-width: 2px;
+}
+
+.link {
+    stroke: #777;
+    stroke-width: 2px;
 }
