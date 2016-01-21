@@ -32,15 +32,13 @@ body
 	background-color: rgba(238, 230, 224, 0.78);
 }
 
-.node {
-    fill: #ccc;
-    stroke: #fff;
-    stroke-width: 2px;
+.link {
+  stroke: #ccc;
 }
 
-.link {
-    stroke: #777;
-    stroke-width: 2px;
+.node text {
+  pointer-events: none;
+  font: 10px sans-serif;
 }
 .form-control
 {
