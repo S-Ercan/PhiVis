@@ -59,38 +59,50 @@ loadJSON(function(response)
 
 function addDisease(disease)
 {
-	$('#selectedOverview').jtable('addRecord', {
-		record: {
-			DiseaseId: disease.id, Disease: disease.name
-		},
-		clientOnly: true
-	});
+	if(!$('#selectedOverview').jtable('getRowByKey', disease.id))
+	{
+		$('#selectedOverview').jtable('addRecord', {
+			record: {
+				DiseaseId: disease.id, Disease: disease.name
+			},
+			clientOnly: true
+		});
+	}
 }
 
 // ~~~~~~ Stack Bars ~~~~~~~
+var svg;
 function stackBars(diseases) {
+	// Adapted from http://bl.ocks.org/mbostock/3886208
+	var data = [];
+	var diseaseList = [];
 	var genes = [];
 	for (var key in diseases) {
-		var disease = diseases[key];
-		for (var i in disease)
+		var diseaseObject = {};
+		for (var i in diseases[key])
 		{
 			genes.push(disease[i].Gene);
+			var disease = diseases[key][i];
+			var geneName = disease.Gene;
+			diseaseObject.Disease = disease.Disease;
+
+			if (!(geneName in diseaseObject))
+			{
+				diseaseObject[geneName] = 0;
+			}
+			diseaseObject[geneName] = diseaseObject[geneName] + 1;
+
+			genes.push(geneName);
 		}
+		data.push(diseaseObject);
 	}
 	genes = genes.sort().filter(function(item, index, array) {
 		return !index || item != array[index - 1];
 	});
 
-	// Adapted from http://bl.ocks.org/mbostock/3886208
-	var data = [
-		{State: "AL", "A": 310504, "B": 552339, "C": 259034},
-		{State: "AK", "A": 52083, "C": 85640, "E": 42153},
-		{State: "AZ", "B": 515910, "C": 828669, "D": 362642}
-	];
-
-	var margin = {top: 20, right: 20, bottom: 30, left: 60},
-    width = 800 - margin.left - margin.right,
-    height = 500 - margin.top - margin.bottom;
+	var margin = {top: 20, right: 20, bottom: 30, left: 50},
+    width = 900 - margin.left - margin.right,
+    height = 700 - margin.top - margin.bottom;
 
 	var x = d3.scale.ordinal()
 		.rangeRoundBands([0, width], 0.1);
@@ -110,26 +122,38 @@ function stackBars(diseases) {
 		.orient("left")
 		.tickFormat(d3.format(".2s"));
 
-	var svg = d3.select("#graphViz").append("svg")
+	var tip = d3.tip()
+		.attr('class', 'd3-tip')
+		.offset([25, 0])
+		.html(function(d) {
+			return "<strong>Gene:</strong> <span style='color:red'>" + d.gene + "</span>";
+		});
+
+	if (svg)
+	{
+		d3.select('#graphViz').selectAll('*').remove();
+	}
+	svg = d3.select("#graphViz").append("svg")
 		.attr("width", width + margin.left + margin.right)
 		.attr("height", height + margin.top + margin.bottom)
 		.append("g")
 		.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
+	svg.call(tip);
+
 	color.domain(genes);
 
 	data.forEach(function(d) {
 		var y0 = 0;
-		d.genes = color.domain().map(function(name) {
-			// name should be a gene name; if d.Gene = name, add 1 to y1
-			return {name: name, y0: y0, y1: y0 += +d[name] ? +d[name] : 0};
+		d.genes = color.domain().map(function(gene) {
+			return {gene: gene, y0: y0, y1: y0 += +d[gene] ? +d[gene] : 0};
 		});
 		d.total = d.genes[d.genes.length - 1].y1;
 	});
 
 	data.sort(function(a, b) { return b.total - a.total; });
 
-	x.domain(data.map(function(d) { return d.State; }));
+	x.domain(data.map(function(d) { return d.Disease; }));
 	y.domain([0, d3.max(data, function(d) { return d.total; })]);
 
 	svg.append("g")
@@ -145,13 +169,13 @@ function stackBars(diseases) {
 		.attr("y", 6)
 		.attr("dy", ".71em")
 		.style("text-anchor", "end")
-		.text("Population");
+		.text("Genes");
 
 	var state = svg.selectAll(".state")
 		.data(data)
-	.enter().append("g")
+		.enter().append("g")
 		.attr("class", "g")
-		.attr("transform", function(d) { return "translate(" + x(d.State) + ",0)"; });
+		.attr("transform", function(d) { return "translate(" + x(d.Disease) + ", 0)"; });
 
 	state.selectAll("rect")
 		.data(function(d) { return d.genes; })
@@ -159,11 +183,13 @@ function stackBars(diseases) {
 		.attr("width", x.rangeBand())
 		.attr("y", function(d) { return y(d.y1); })
 		.attr("height", function(d) { return y(d.y0) - y(d.y1); })
-		.style("fill", function(d) { return color(d.name); });
+		.style("fill", function(d) { return color(d.gene); })
+		.on('mouseover', tip.show)
+		.on('mouseout', tip.hide);
 
 	var legend = svg.selectAll(".legend")
 		.data(color.domain().slice().reverse())
-	.enter().append("g")
+		.enter().append("g")
 		.attr("class", "legend")
 		.attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
 

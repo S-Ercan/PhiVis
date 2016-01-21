@@ -1,6 +1,6 @@
 body
 {
-  background-color: #303030;
+  background-color: #505050;
 }
 
 #graphViz
@@ -17,7 +17,14 @@ body
 	height: 750px;
 	width: 500px;
 	float: left;
+	padding-right: 10px;
 	border-right: thin solid rgba(255, 255, 255, 0.64);
+}
+
+#allDiseases
+{
+	margin-left: 10px;
+	color: white;
 }
 
 #overview
@@ -34,4 +41,8 @@ body
 .link {
     stroke: #777;
     stroke-width: 2px;
+}
+.form-control
+{
+	margin-bottom: 25px;
 }
