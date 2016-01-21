@@ -97,9 +97,9 @@ function stackBars(diseases) {
 		return !index || item != array[index - 1];
 	});
 
-	var margin = {top: 20, right: 20, bottom: 30, left: 50},
+	var margin = {top: 20, right: 20, bottom: 200, left: 50},
     width = 900 - margin.left - margin.right,
-    height = 700 - margin.top - margin.bottom;
+    height = 600 - margin.top - margin.bottom;
 
 	var x = d3.scale.ordinal()
 		.rangeRoundBands([0, width], .1);
@@ -156,19 +156,25 @@ function stackBars(diseases) {
 	svg.append("g")
 		.attr("class", "x axis")
 		.attr("transform", "translate(0," + height + ")")
-		.call(xAxis);
+		.attr("height", 50)
+		.call(xAxis)
+        .selectAll("text")  
+            .style({"text-anchor": "end", "font-size": "0.8em"})
+            .attr("dx", "-.8em")
+            .attr("dy", ".15em")
+            .attr("transform", "rotate(-65)" );
 
 	svg.append("g")
 		.attr("class", "y axis")
 		.call(yAxis)
-	.append("text")
+		.append("text")
 		.attr("transform", "rotate(-90)")
 		.attr("y", 6)
 		.attr("dy", ".71em")
 		.style("text-anchor", "end")
 		.text("Genes");
 
-	var state = svg.selectAll(".state")
+	var state = svg.selectAll(".gene")
 		.data(data)
 		.enter().append("g")
 		.attr("class", "g")
@@ -184,7 +190,7 @@ function stackBars(diseases) {
 		.on('mouseover', tip.show)
 		.on('mouseout', tip.hide);
 
-	var legend = svg.selectAll(".legend")
+	/*var legend = svg.selectAll(".legend")
 		.data(color.domain().slice().reverse())
 		.enter().append("g")
 		.attr("class", "legend")
@@ -201,7 +207,7 @@ function stackBars(diseases) {
 		.attr("y", 9)
 		.attr("dy", ".35em")
 		.style("text-anchor", "end")
-		.text(function(d) { return d; });
+		.text(function(d) { return d; });*/
 }
 
 function forceGraph() {

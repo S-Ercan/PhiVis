@@ -20,6 +20,7 @@ $(document).ready(function () {
 			Disease: {
 				title: 'Disease'
 			}
-		}
+		},
+		messages: {noDataAvailable: "No diseases selected"}
 	});
 });
