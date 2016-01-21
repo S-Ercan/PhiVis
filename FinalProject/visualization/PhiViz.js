@@ -81,8 +81,8 @@ function stackBars(diseases) {
 		var diseaseObject = {};
 		for (var i in diseases[key])
 		{
-			genes.push(disease[i].Gene);
 			var disease = diseases[key][i];
+			genes.push(disease.Gene);
 			var geneName = disease.Gene;
 			diseaseObject.Disease = disease.Disease;
 
