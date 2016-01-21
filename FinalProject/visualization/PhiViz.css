@@ -1,6 +1,6 @@
 body
 {
-  background-color: #303030;
+  background-color: #505050;
 }
 
 #graphViz
@@ -23,4 +23,9 @@ body
 #overview
 {
 	background-color: rgba(238, 230, 224, 0.78);
+}
+
+.form-control
+{
+	margin-bottom: 25px;
 }

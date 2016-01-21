@@ -166,7 +166,7 @@ function stackBars(diseases) {
 		.attr("y", 6)
 		.attr("dy", ".71em")
 		.style("text-anchor", "end")
-		.text("Population");
+		.text("Genes");
 
 	var state = svg.selectAll(".state")
 		.data(data)
