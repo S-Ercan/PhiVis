@@ -58,12 +58,15 @@ loadJSON(function(response)
 
 function addDisease(disease)
 {
-	$('#selectedOverview').jtable('addRecord', {
-		record: {
-			DiseaseId: disease.id, Disease: disease.name
-		},
-		clientOnly: true
-	});
+	if(!$('#selectedOverview').jtable('getRowByKey', disease.id))
+	{
+		$('#selectedOverview').jtable('addRecord', {
+			record: {
+				DiseaseId: disease.id, Disease: disease.name
+			},
+			clientOnly: true
+		});
+	}
 }
 
 var svg;
