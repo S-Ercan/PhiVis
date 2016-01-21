@@ -1,3 +1,14 @@
+$("#stackBarsButton").click(function() {
+	var rows = $('#selectedOverview').find('.jtable-data-row')
+	var selectedDiseases = {};
+	var diseaseName;
+	$.each(rows, function() {
+		diseaseName = $(this).attr('data-record-key');
+		selectedDiseases[diseaseName] = diseases[diseaseName];
+	});
+	stackBars(selectedDiseases);
+});
+
 function loadJSON(callback)
 {
 	var xobj = new XMLHttpRequest();
@@ -11,14 +22,14 @@ function loadJSON(callback)
 	xobj.send(null);
 }
 
+var diseases = {};
 loadJSON(function(response)
 {
 	var phi = JSON.parse(response);
-	var diseases = {};
-
 	var disease;
 	for (var i = 0; i < phi.length; i++) {
 		disease = phi[i].Disease;
+		gene = phi[i].Gene;
 		if (disease in diseases) {
 			diseases[disease].push(phi[i]);
 		}
@@ -55,12 +66,24 @@ function addDisease(disease)
 	});
 }
 
-function stackBars() {
+function stackBars(diseases) {
+	var genes = [];
+	for (var key in diseases) {
+		var disease = diseases[key];
+		for (var i in disease)
+		{
+			genes.push(disease[i].Gene);	
+		}
+	}
+	genes = genes.sort().filter(function(item, index, array) {
+		return !index || item != array[index - 1];
+	});
+
 	// Adapted from http://bl.ocks.org/mbostock/3886208
 	var data = [
-		{State: "AL", "Under 5 Years": 310504, "5 to 13 Years": 552339, "14 to 17 Years": 259034, "18 to 24 Years": 450818},
-		{State: "AK", "Under 5 Years": 52083, "5 to 13 Years": 85640, "14 to 17 Years": 42153, "18 to 24 Years": 74257},
-		{State: "AZ", "Under 5 Years": 515910, "5 to 13 Years": 828669, "14 to 17 Years": 362642, "18 to 24 Years": 601943}
+		{State: "AL", "A": 310504, "B": 552339, "C": 259034},
+		{State: "AK", "A": 52083, "C": 85640, "E": 42153},
+		{State: "AZ", "B": 515910, "C": 828669, "D": 362642}
 	];
 
 	var margin = {top: 20, right: 20, bottom: 30, left: 60},
@@ -91,12 +114,15 @@ function stackBars() {
 		.append("g")
 		.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-	color.domain(d3.keys(data[0]).filter(function(key) { return key !== "State"; }));
+	color.domain(genes);
 
 	data.forEach(function(d) {
 		var y0 = 0;
-		d.ages = color.domain().map(function(name) { return {name: name, y0: y0, y1: y0 += +d[name]}; });
-		d.total = d.ages[d.ages.length - 1].y1;
+		d.genes = color.domain().map(function(name) {
+			// name should be a gene name; if d.Gene = name, add 1 to y1
+			return {name: name, y0: y0, y1: y0 += +d[name] ? +d[name] : 0};
+		});
+		d.total = d.genes[d.genes.length - 1].y1;
 	});
 
 	data.sort(function(a, b) { return b.total - a.total; });
@@ -126,8 +152,8 @@ function stackBars() {
 		.attr("transform", function(d) { return "translate(" + x(d.State) + ",0)"; });
 
 	state.selectAll("rect")
-		.data(function(d) { return d.ages; })
-	.enter().append("rect")
+		.data(function(d) { return d.genes; })
+		.enter().append("rect")
 		.attr("width", x.rangeBand())
 		.attr("y", function(d) { return y(d.y1); })
 		.attr("height", function(d) { return y(d.y0) - y(d.y1); })
