@@ -66,6 +66,7 @@ function addDisease(disease)
 	});
 }
 
+var svg;
 function stackBars(diseases) {
 	// Adapted from http://bl.ocks.org/mbostock/3886208
 	var data = [];
@@ -122,7 +123,11 @@ function stackBars(diseases) {
 			return "<strong>Gene:</strong> <span style='color:red'>" + d.gene + "</span>";
 		});
 
-	var svg = d3.select("#graphViz").append("svg")
+	if (svg)
+	{
+		d3.select('#graphViz').selectAll('*').remove();
+	}
+	svg = d3.select("#graphViz").append("svg")
 		.attr("width", width + margin.left + margin.right)
 		.attr("height", height + margin.top + margin.bottom)
 		.append("g")
