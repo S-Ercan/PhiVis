@@ -168,15 +168,17 @@ function stackBars(diseases) {
 		.attr("class", "x axis")
 		.attr("transform", "translate(0," + height + ")")
 		.attr("height", 50)
+		.attr("fill", "#e8e7e7")
 		.call(xAxis)
         .selectAll("text")
-            .style({"text-anchor": "end", "font-size": "0.8em"})
+            .style({"text-anchor": "end", "font-size": "0.95em"})
             .attr("dx", "-.8em")
             .attr("dy", ".15em")
             .attr("transform", "rotate(-65)" );
 
 	svg.append("g")
 		.attr("class", "y axis")
+		.attr("fill", "#e8e7e7")
 		.call(yAxis)
 		.append("text")
 		.attr("transform", "rotate(-90)")
@@ -200,30 +202,11 @@ function stackBars(diseases) {
 		.style("fill", function(d) { return color(d.gene); })
 		.on('mouseover', tip.show)
 		.on('mouseout', tip.hide);
-
-	/*var legend = svg.selectAll(".legend")
-		.data(color.domain().slice().reverse())
-		.enter().append("g")
-		.attr("class", "legend")
-		.attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
-
-	legend.append("rect")
-		.attr("x", width - 18)
-		.attr("width", 18)
-		.attr("height", 18)
-		.style("fill", color);
-
-	legend.append("text")
-		.attr("x", width - 24)
-		.attr("y", 9)
-		.attr("dy", ".35em")
-		.style("text-anchor", "end")
-		.text(function(d) { return d; });*/
 }
 
 // ~~~~~~ Force Graph ~~~~~~~
 function forceGraph(diseases) {
-	var width = 960,
+	var width = 910,
 	    height = 500;
 	var nodes = [];
 	var links = [];
@@ -232,27 +215,28 @@ function forceGraph(diseases) {
 	var lastDiseaseIndex = 0;
 
 	for (var key in diseases) {
-		nodes.push({name: key});
+		nodes.push({name: key, type: "disease"});
 		nodesIndex += 1;
 		lastDiseaseIndex = nodesIndex;
 		for (var i in diseases[key])
 		{
 			var phenoName = diseases[key][i].MutantPhenotype;
+			var phenoNode = nodes[phenotypes[phenoName]];
 			if (phenoName in phenotypes) {
 					links.push({"source": lastDiseaseIndex, "target": phenotypes[phenoName]});
+					if (phenoNode.diseases.indexOf(key) == -1) {
+						phenoNode.type = "commonPhenotype";
+						phenoNode.diseases.push(key);
+					}
 			}
 			else {
-					nodes.push({name: phenoName});
+					nodes.push({name: phenoName, type: "uniquePhenotype", diseases: [key]});
 					nodesIndex += 1;
 					links.push({"source": lastDiseaseIndex, "target": nodesIndex});
 					phenotypes[phenoName] = nodesIndex;
 			}
 		}
 	}
-
-	console.log(diseases);
-	console.log(nodes);
-	console.log(links);
 
 	if (svg)
 	{
@@ -265,16 +249,14 @@ function forceGraph(diseases) {
 
 	var force = d3.layout.force()
 			.gravity(0.05)
-			.distance(100)
-			.charge(-100)
+			.distance(150)
+			.charge(-150)
 			.size([width, height]);
 
 	force
 			.nodes(nodes)
 			.links(links)
 			.start();
-
-
 
 	var link = svg.selectAll(".link")
 	      .data(links)
@@ -287,23 +269,35 @@ function forceGraph(diseases) {
 	      .attr("class", "node")
 	      .call(force.drag);
 
-	node.append("image")
-      .attr("xlink:href", "https://github.com/favicon.ico")
-      .attr("x", -8)
-      .attr("y", -8)
-      .attr("width", 16)
-      .attr("height", 16);
+	node.append("circle")
+			.attr("r", function(d){
+				if (d.type == "disease") {return 10;}
+				else if (d.type == "uniquePhenotype" || d.type == "commonPhenotype") {return 5;}})
+			.attr("fill", function(d){
+				if (d.type == "disease"){
+					return "#de2b2b";}
+				else if (d.type == "uniquePhenotype"){
+					return "#3d7de8";}
+				else if (d.type == "commonPhenotype"){
+					if (d.diseases.length == Object.keys(diseases).length) {
+						return "#b16cf4";
+					}
+					else {
+						return "#50e83d";
+					}
+				}});
 
 	node.append("text")
       .attr("dx", 12)
       .attr("dy", ".35em")
+			.attr("fill", "#383838")
       .text(function(d) { return d.name; });
 
-	force.on("tick", function() {
-    link.attr("x1", function(d) { return d.source.x; })
-        .attr("y1", function(d) { return d.source.y; })
-        .attr("x2", function(d) { return d.target.x; })
-        .attr("y2", function(d) { return d.target.y; });
+ force.on("tick", function() {
+  link.attr("x1", function(d) { return d.source.x; })
+      .attr("y1", function(d) { return d.source.y; })
+      .attr("x2", function(d) { return d.target.x; })
+      .attr("y2", function(d) { return d.target.y; });
 
 		node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
 			});

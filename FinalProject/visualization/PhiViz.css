@@ -9,7 +9,7 @@ body
 	float: right;
 	height: 750px;
 	width: 900px;
-	background-color: rgb(207, 214, 210);
+	background-color: rgba(207, 214, 210, 0.46);
 }
 
 #mainMenu
@@ -38,7 +38,8 @@ body
 
 .node text {
   pointer-events: none;
-  font: 10px sans-serif;
+  font: 12px sans-serif;
+	color: #e8e7e7;
 }
 .form-control
 {
