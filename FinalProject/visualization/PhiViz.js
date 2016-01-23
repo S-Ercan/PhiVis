@@ -9,6 +9,17 @@ $("#stackBarsButton").click(function() {
 	stackBars(selectedDiseases);
 });
 
+$("#forceGraphButton").click(function() {
+	var rows = $('#selectedOverview').find('.jtable-data-row');
+	var selectedDiseases = {};
+	var diseaseName;
+	$.each(rows, function() {
+		diseaseName = $(this).attr('data-record-key');
+		selectedDiseases[diseaseName] = diseases[diseaseName];
+	});
+	forceGraph(selectedDiseases);
+});
+
 function loadJSON(callback)
 {
 	var xobj = new XMLHttpRequest();
@@ -29,8 +40,6 @@ loadJSON(function(response)
 	var disease;
 	for (var i = 0; i < phi.length; i++) {
 		disease = phi[i].Disease;
-		gene = phi[i].Gene;
-	 	phenotype= phi[i].MutantPhenotype;
 		if (disease in diseases) {
 			diseases[disease].push(phi[i]);
 		}
@@ -75,7 +84,6 @@ var svg;
 function stackBars(diseases) {
 	// Adapted from http://bl.ocks.org/mbostock/3886208
 	var data = [];
-	var diseaseList = [];
 	var genes = [];
 	for (var key in diseases) {
 		var diseaseObject = {};
@@ -161,7 +169,7 @@ function stackBars(diseases) {
 		.attr("transform", "translate(0," + height + ")")
 		.attr("height", 50)
 		.call(xAxis)
-        .selectAll("text")  
+        .selectAll("text")
             .style({"text-anchor": "end", "font-size": "0.8em"})
             .attr("dx", "-.8em")
             .attr("dy", ".15em")
@@ -203,20 +211,44 @@ function stackBars(diseases) {
 }
 
 // ~~~~~~ Force Graph ~~~~~~~
-function forceGraph() {
+function forceGraph(diseases) {
 	var width = 960,
 	    height = 500;
+	var nodes = [];
+	var links = [];
+	var phenotypes = {};
+	var nodesIndex = -1;
+	var lastDiseaseIndex = 0;
 
-	var nodes = [
-    { x:   width/3, y: height/2, name: "Hi" },
-    { x: 2*width/3, y: height/2, name: "Hello" }
-	];
+	for (var key in diseases) {
+		nodes.push({name: key});
+		nodesIndex += 1;
+		lastDiseaseIndex = nodesIndex;
+		for (var i in diseases[key])
+		{
+			var phenoName = diseases[key][i].MutantPhenotype;
+			if (phenoName in phenotypes) {
+					links.push({"source": lastDiseaseIndex, "target": phenotypes[phenoName]});
+			}
+			else {
+					nodes.push({name: phenoName});
+					nodesIndex += 1;
+					links.push({"source": lastDiseaseIndex, "target": nodesIndex});
+					phenotypes[phenoName] = nodesIndex;
+			}
+		}
+	}
 
-	var links = [
-    { source: 0, target: 1 }
-	];
+	console.log(diseases);
+	console.log(nodes);
+	console.log(links);
 
-	var svg = d3.select("#graphViz").append("svg")
+	if (svg)
+	{
+		d3.select('#graphViz').selectAll('*').remove();
+	}
+
+	svg = d3.select("#graphViz").append("svg")
 	    .attr("width", width)
 	    .attr("height", height);
 
@@ -230,6 +262,8 @@ function forceGraph() {
 			.nodes(nodes)
 			.links(links)
 			.start();
+
+
 
 	var link = svg.selectAll(".link")
 	      .data(links)
