@@ -100,7 +100,7 @@ function stackBars(diseases) {
 		return !index || item != array[index - 1];
 	});
 
-	var margin = {top: 20, right: 20, bottom: 200, left: 50},
+	var margin = {top: 40, right: 20, bottom: 200, left: 50},
     width = 900 - margin.left - margin.right,
     height = 600 - margin.top - margin.bottom;
 
@@ -176,6 +176,14 @@ function stackBars(diseases) {
 		.attr("dy", ".71em")
 		.style("text-anchor", "end")
 		.text("Genes");
+		
+	svg.append("text")
+        .attr("x", (width / 2))             
+        .attr("y", (margin.top / 2) - 35)
+        .attr("text-anchor", "middle")  
+        .style("font-size", "16px") 
+        .style("text-decoration", "underline")  
+        .text("Genes by disease");
 
 	var state = svg.selectAll(".gene")
 		.data(data)
@@ -192,25 +200,6 @@ function stackBars(diseases) {
 		.style("fill", function(d) { return color(d.gene); })
 		.on('mouseover', tip.show)
 		.on('mouseout', tip.hide);
-
-	/*var legend = svg.selectAll(".legend")
-		.data(color.domain().slice().reverse())
-		.enter().append("g")
-		.attr("class", "legend")
-		.attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
-
-	legend.append("rect")
-		.attr("x", width - 18)
-		.attr("width", 18)
-		.attr("height", 18)
-		.style("fill", color);
-
-	legend.append("text")
-		.attr("x", width - 24)
-		.attr("y", 9)
-		.attr("dy", ".35em")
-		.style("text-anchor", "end")
-		.text(function(d) { return d; });*/
 }
 
 // ~~~~~~ Force Graph ~~~~~~~
