@@ -186,13 +186,14 @@ function stackBars(diseases) {
 		.attr("dy", ".71em")
 		.style("text-anchor", "end")
 		.text("Genes");
-		
+
 	svg.append("text")
-        .attr("x", (width / 2))             
+        .attr("x", (width / 2))
         .attr("y", (margin.top / 2) - 35)
-        .attr("text-anchor", "middle")  
-        .style("font-size", "16px") 
-        .style("text-decoration", "underline")  
+        .attr("text-anchor", "middle")
+				.attr("fill", "#e8e7e7")
+        .style("font-size", "16px")
+        .style("text-decoration", "underline")
         .text("Genes by disease");
 
 	var state = svg.selectAll(".gene")
@@ -214,8 +215,8 @@ function stackBars(diseases) {
 
 // ~~~~~~ Force Graph ~~~~~~~
 function forceGraph(diseases) {
-	var width = 910,
-	    height = 500;
+	var width = 900,
+	    height = 750;
 	var nodes = [];
 	var links = [];
 	var phenotypes = {};
