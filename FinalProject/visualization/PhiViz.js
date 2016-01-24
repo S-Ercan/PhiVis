@@ -257,9 +257,10 @@ function forceGraph(diseases) {
 	    .attr("height", height);
 
 	var force = d3.layout.force()
-			.gravity(0.05)
+			.gravity(0.03)
 			.distance(150)
 			.charge(-150)
+			.linkStrength(0.1)
 			.size([width, height]);
 
 	force
