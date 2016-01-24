@@ -32,6 +32,13 @@ body
 	background-color: rgba(238, 230, 224, 0.78);
 }
 
+.d3-tip
+{
+	padding: 0.4em;
+	border: 2px double gray;
+	background-color: rgba(200, 200, 200, 0.9);
+}
+
 .link {
   stroke: #ccc;
 }
