@@ -113,17 +113,14 @@ function stackBars(diseases) {
 
 	var x = d3.scale.ordinal()
 		.rangeRoundBands([0, width], 0.1);
-
 	var y = d3.scale.linear()
 		.rangeRound([height, 0]);
-
 	var color = d3.scale.ordinal()
 		.range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]);
 
 	var xAxis = d3.svg.axis()
 		.scale(x)
 		.orient("bottom");
-
 	var yAxis = d3.svg.axis()
 		.scale(y)
 		.orient("left")
@@ -289,8 +286,13 @@ function forceGraph(diseases) {
 
 	node.append("circle")
 			.attr("r", function(d){
-				if (d.type == "disease") {return 10;}
-				else if (d.type == "uniquePhenotype" || d.type == "commonPhenotype") {return 5;}})
+				if (d.type == "disease") {
+					return 10;
+				}
+				else if (d.type == "uniquePhenotype" || d.type == "commonPhenotype") {
+					return 5;
+				}
+			})
 			.attr("fill", function(d){
 				if (d.type == "disease"){
 					return colors.disease;
@@ -311,14 +313,18 @@ function forceGraph(diseases) {
 		.attr("dx", 12)
 		.attr("dy", ".35em")
 		.attr("fill", nodeColor)
-		.text(function(d) { return d.name; });
+		.text(function(d) {
+			return d.name;
+		});
 
 	force.on("tick", function() {
 		link.attr("x1", function(d) { return d.source.x; })
 		  .attr("y1", function(d) { return d.source.y; })
 		  .attr("x2", function(d) { return d.target.x; })
 		  .attr("y2", function(d) { return d.target.y; });
-		node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+		node.attr("transform", function(d) {
+			return "translate(" + d.x + "," + d.y + ")";
+		});
 	});
 
 	var legendData = [

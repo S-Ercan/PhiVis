@@ -18,16 +18,6 @@ h2#infoHeader
 	margin-top: 0px;
 }
 
-#info
-{
-	float: top;
-}
-
-hr
-{
-	margin: 5px !important;
-}
-
 #graphVis
 {
 	float: left;
@@ -55,15 +45,9 @@ hr
 	font-size: large;
 }
 
-#overview
-{
-	background-color: rgba(238, 230, 224, 0.78);
-}
-
 #buttons
 {
-	padding-top: 25px;
-	vertical-align: top;
+	padding-top: 20px;
 }
 
 .visButton {
@@ -72,7 +56,7 @@ hr
     -webkit-border-radius: 4px;
     border-radius:5px;
     color: #fff;
-    font-family: 'Oswald';
+    font-family: "Oswald";
     font-size: 20px;
     text-decoration: none;
     cursor: pointer;
@@ -102,7 +86,8 @@ hr
 	font: 12px sans-serif;
 	color: #e8e7e7;
 }
+
 .form-control
 {
-	margin-bottom: 25px;
+	margin-bottom: 20px;
 }
