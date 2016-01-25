@@ -1,3 +1,8 @@
+/**
+ * Listener for the 'Show stacked bar chart' button.
+ * Retrieves all diseases currently listed in the 'Selected diseases' grid
+ * and passes them to the function creating the stacked bar chart.
+ */
 $("#stackBarsButton").click(function() {
 	var rows = $('#selectedOverview').find('.jtable-data-row');
 	var selectedDiseases = {};
@@ -9,6 +14,11 @@ $("#stackBarsButton").click(function() {
 	stackBars(selectedDiseases);
 });
 
+/**
+ * Listener for the 'Show force-directed graph' button.
+ * Retrieves all diseases currently listed in the 'Selected diseases' grid
+ * and passes them to the function creating the force-directed graph.
+ */
 $("#forceGraphButton").click(function() {
 	var rows = $('#selectedOverview').find('.jtable-data-row');
 	var selectedDiseases = {};
@@ -20,6 +30,9 @@ $("#forceGraphButton").click(function() {
 	forceGraph(selectedDiseases);
 });
 
+/**
+ * Function to load a JSON file, executing 'callback' after it is finished.
+ */
 function loadJSON(callback)
 {
 	var xobj = new XMLHttpRequest();
@@ -34,6 +47,10 @@ function loadJSON(callback)
 }
 
 var diseases = {};
+/**
+ * Loads the JSON file containing the diseases and
+ * transforms the data into a format better suited for later use.
+ */
 loadJSON(function(response)
 {
 	var phi = JSON.parse(response);
@@ -66,6 +83,9 @@ loadJSON(function(response)
 	});
 });
 
+/**
+ * Adds disease to the jTable containing the list of selected diseases.
+ */
 function addDisease(disease)
 {
 	if(!$('#selectedOverview').jtable('getRowByKey', disease.id))
@@ -79,7 +99,9 @@ function addDisease(disease)
 	}
 }
 
-// ~~~~~~ Stack Bars ~~~~~~~
+/**
+ * Creates a stacked bar chart using the given list of diseases.
+ */
 var svg;
 var margin = {top: 40, right: 20, bottom: 200, left: 50},
 	width = 900 - margin.left - margin.right,
@@ -208,7 +230,9 @@ function stackBars(diseases) {
 		.on('mouseout', tip.hide);
 }
 
-// ~~~~~~ Force Graph ~~~~~~~
+/**
+ * Creates a force-directed graph using the given list of diseases.
+ */
 function forceGraph(diseases) {
 	var nodes = [];
 	var links = [];
