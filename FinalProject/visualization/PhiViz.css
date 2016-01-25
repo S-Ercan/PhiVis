@@ -1,3 +1,8 @@
+html, body
+{
+	height: 100%;
+}
+
 body
 {
   background-color: #505050 !important;
@@ -8,10 +13,14 @@ h2, p, li
 	color: white !important;
 }
 
+h2#infoHeader
+{
+	margin-top: 0px;
+}
+
 #info
 {
-	margin-bottom: 0px;
-	padding: 5px;
+	float: top;
 }
 
 hr
@@ -19,20 +28,22 @@ hr
 	margin: 5px !important;
 }
 
-#graphViz
+#graphVis
 {
-	position: static;
-	float: right;
-	height: 750px;
-	width: 900px;
+	float: left;
+	min-height: 97%;
+	min-width: 62%;
+	margin-top: 15px;
+	margin-left: 25px;
 	background-color: rgba(207, 214, 210, 0.46);
 }
 
 #mainMenu
 {
-	height: 750px;
+	min-height: 97%;
 	width: 500px;
 	float: left;
+	margin-top: 15px;
 	padding: 0 10px 10px 10px;
 	border-right: thin solid rgba(255, 255, 255, 0.64);
 }
@@ -87,8 +98,8 @@ hr
 }
 
 .node text {
-  pointer-events: none;
-  font: 12px sans-serif;
+	pointer-events: none;
+	font: 12px sans-serif;
 	color: #e8e7e7;
 }
 .form-control

@@ -81,6 +81,9 @@ function addDisease(disease)
 
 // ~~~~~~ Stack Bars ~~~~~~~
 var svg;
+var margin = {top: 40, right: 20, bottom: 200, left: 50},
+	width = 900 - margin.left - margin.right,
+	height = 600 - margin.top - margin.bottom;
 function stackBars(diseases) {
 	// Adapted from http://bl.ocks.org/mbostock/3886208
 	var data = [];
@@ -108,10 +111,6 @@ function stackBars(diseases) {
 		return !index || item != array[index - 1];
 	});
 
-	var margin = {top: 40, right: 20, bottom: 200, left: 50},
-    width = 900 - margin.left - margin.right,
-    height = 600 - margin.top - margin.bottom;
-
 	var x = d3.scale.ordinal()
 		.rangeRoundBands([0, width], 0.1);
 
@@ -134,14 +133,14 @@ function stackBars(diseases) {
 		.attr('class', 'd3-tip')
 		.offset([25, 0])
 		.html(function(d) {
-			return "<strong>Gene:</strong> <span class='tooltip' style='color:red'>" + d.gene + "</span>";
+			return "<strong>Gene:</strong> <span style='color:red'>" + d.gene + "</span>";
 		});
 
 	if (svg)
 	{
-		d3.select('#graphViz').selectAll('*').remove();
+		d3.select('#graphVis').selectAll('*').remove();
 	}
-	svg = d3.select("#graphViz").append("svg")
+	svg = d3.select("#graphVis").append("svg")
 		.attr("width", width + margin.left + margin.right)
 		.attr("height", height + margin.top + margin.bottom)
 		.append("g")
@@ -215,8 +214,6 @@ function stackBars(diseases) {
 
 // ~~~~~~ Force Graph ~~~~~~~
 function forceGraph(diseases) {
-	var width = 900,
-	    height = 750;
 	var nodes = [];
 	var links = [];
 	var phenotypes = {};
@@ -249,12 +246,12 @@ function forceGraph(diseases) {
 
 	if (svg)
 	{
-		d3.select('#graphViz').selectAll('*').remove();
+		d3.select('#graphVis').selectAll('*').remove();
 	}
 
-	svg = d3.select("#graphViz").append("svg")
-	    .attr("width", width)
-	    .attr("height", height);
+	svg = d3.select("#graphVis").append("svg")
+		.attr("width", width + margin.left + margin.right)
+		.attr("height", height + margin.top + margin.bottom);
 
 	var force = d3.layout.force()
 			.gravity(0.03)
