@@ -108,7 +108,9 @@ var margin = {top: 40, right: 20, bottom: 200, left: 50},
 	height = 600 - margin.top - margin.bottom;
 function stackBars(diseases) {
 	// Adapted from http://bl.ocks.org/mbostock/3886208
+	// List of data to be displayed
 	var data = [];
+	// List of genes present in 'diseases'
 	var genes = [];
 	for (var key in diseases) {
 		var diseaseObject = {};
@@ -129,10 +131,12 @@ function stackBars(diseases) {
 		}
 		data.push(diseaseObject);
 	}
+	// Remove duplicate genes
 	genes = genes.sort().filter(function(item, index, array) {
 		return !index || item != array[index - 1];
 	});
 
+	// Create axis and color domains
 	var x = d3.scale.ordinal()
 		.rangeRoundBands([0, width], 0.1);
 	var y = d3.scale.linear()
@@ -140,6 +144,7 @@ function stackBars(diseases) {
 	var color = d3.scale.ordinal()
 		.range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]);
 
+	// Create axes
 	var xAxis = d3.svg.axis()
 		.scale(x)
 		.orient("bottom");
@@ -148,6 +153,7 @@ function stackBars(diseases) {
 		.orient("left")
 		.tickFormat(d3.format(".2s"));
 
+	// Create tooltips for stacks
 	var tip = d3.tip()
 		.attr('class', 'd3-tip')
 		.offset([25, 0])
@@ -155,10 +161,12 @@ function stackBars(diseases) {
 			return "<strong>Gene:</strong> <span style='color:red'>" + d.gene + "</span>";
 		});
 
+	// Remove existing SVG
 	if (svg)
 	{
 		d3.select('#graphVis').selectAll('*').remove();
 	}
+	// Create SVG for bar chart
 	svg = d3.select("#graphVis").append("svg")
 		.attr("width", width + margin.left + margin.right)
 		.attr("height", height + margin.top + margin.bottom)
@@ -166,9 +174,9 @@ function stackBars(diseases) {
 		.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 	svg.call(tip);
-
 	color.domain(genes);
 
+	// Count number of entries for each gene for each disease
 	data.forEach(function(d) {
 		var y0 = 0;
 		d.genes = color.domain().map(function(gene) {
@@ -176,12 +184,13 @@ function stackBars(diseases) {
 		});
 		d.total = d.genes[d.genes.length - 1].y1;
 	});
-
+	// Sort bars by height
 	data.sort(function(a, b) { return b.total - a.total; });
 
 	x.domain(data.map(function(d) { return d.Disease; }));
 	y.domain([0, d3.max(data, function(d) { return d.total; })]);
 
+	// Create x axis
 	svg.append("g")
 		.attr("class", "x axis")
 		.attr("transform", "translate(0," + height + ")")
@@ -194,6 +203,7 @@ function stackBars(diseases) {
             .attr("dy", ".15em")
             .attr("transform", "rotate(-65)" );
 
+	// Create y axis
 	svg.append("g")
 		.attr("class", "y axis")
 		.attr("fill", "#e8e7e7")
@@ -205,6 +215,7 @@ function stackBars(diseases) {
 		.style("text-anchor", "end")
 		.text("Genes");
 
+	// Create title
 	svg.append("text")
         .attr("x", (width / 2))
         .attr("y", (margin.top / 2) - 35)
@@ -213,12 +224,14 @@ function stackBars(diseases) {
         .style("font-size", "18px")
         .text("Gene distribution across diseases");
 
+	// Position chart
 	var state = svg.selectAll(".gene")
 		.data(data)
 		.enter().append("g")
 		.attr("class", "g")
 		.attr("transform", function(d) { return "translate(" + x(d.Disease) + ", 0)"; });
 
+	// Create stacked bars
 	state.selectAll("rect")
 		.data(function(d) { return d.genes; })
 		.enter().append("rect")
@@ -243,7 +256,10 @@ function forceGraph(diseases) {
 	var colors = {disease: "#de2b2b", unique: "#3d7de8", common: "#b16cf4", maxCommon: "#50e83d"};
 	var nodeColor = "#383838";
 
+	// Create nodes for diseases and phenotypes
+	// Create a link between a disease and a phenotype if that phenotype is caused by that disease
 	for (var key in diseases) {
+		// Create node for disease
 		nodes.push({name: key, type: "disease"});
 		nodesIndex += 1;
 		lastDiseaseIndex = nodesIndex;
@@ -251,13 +267,16 @@ function forceGraph(diseases) {
 		{
 			var phenoName = diseases[key][i].MutantPhenotype;
 			var phenoNode = nodes[phenotypes[phenoName]];
+			// Phenotype already found for another disease
 			if (phenoName in phenotypes) {
+					// Link to correct disease
 					links.push({"source": lastDiseaseIndex, "target": phenotypes[phenoName]});
 					if (phenoNode.diseases.indexOf(key) == -1) {
 						phenoNode.type = "commonPhenotype";
 						phenoNode.diseases.push(key);
 					}
 			}
+			// New phenotype
 			else {
 					nodes.push({name: phenoName, type: "uniquePhenotype", diseases: [key]});
 					nodesIndex += 1;
@@ -267,16 +286,19 @@ function forceGraph(diseases) {
 		}
 	}
 
+	// Remove existing SVG
 	if (svg)
 	{
 		d3.select('#graphVis').selectAll('*').remove();
 	}
 
+	// Create SVG for graph
 	svg = d3.select("#graphVis").append("svg")
 		.attr("width", width + margin.left + margin.right)
 		.attr("height", height + margin.top + margin.bottom)
 		.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
+	// Create title
 	svg.append("text")
         .attr("x", (width / 2))
         .attr("y", (margin.top / 2) - 35)
@@ -285,23 +307,25 @@ function forceGraph(diseases) {
         .style("font-size", "18px")
         .text("Phenotype distribution across diseases");
 
+	// Initialize graph
 	var force = d3.layout.force()
 		.gravity(0.03)
 		.distance(150)
 		.charge(-150)
 		.linkStrength(0.1)
 		.size([width, height]);
-
 	force
 		.nodes(nodes)
 		.links(links)
 		.start();
 
+	// Initialize links
 	var link = svg.selectAll(".link")
 		.data(links)
 		.enter().append("line")
 		.attr("class", "link");
 
+	// Initialize nodes
 	var node = svg.selectAll(".node")
 	    .data(nodes)
 	    .enter().append("g")
@@ -333,6 +357,7 @@ function forceGraph(diseases) {
 					}
 				}});
 
+	// Add labels to nodes
 	node.append("text")
 		.attr("dx", 12)
 		.attr("dy", ".35em")
@@ -341,6 +366,7 @@ function forceGraph(diseases) {
 			return d.name;
 		});
 
+	// Animate graph
 	force.on("tick", function() {
 		link.attr("x1", function(d) { return d.source.x; })
 		  .attr("y1", function(d) { return d.source.y; })
@@ -351,6 +377,7 @@ function forceGraph(diseases) {
 		});
 	});
 
+	// Create legend
 	var legendData = [
 		{name: "Disease",  type: "disease"},
 		{name: "Unique phenotype",  type: "unique"},
