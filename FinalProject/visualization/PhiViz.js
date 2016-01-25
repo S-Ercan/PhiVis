@@ -219,6 +219,9 @@ function forceGraph(diseases) {
 	var phenotypes = {};
 	var nodesIndex = -1;
 	var lastDiseaseIndex = 0;
+	
+	var colors = {disease: "#de2b2b", unique: "#3d7de8", common: "#b16cf4", maxCommon: "#50e83d"};
+	var nodeColor = "#383838";
 
 	for (var key in diseases) {
 		nodes.push({name: key, type: "disease"});
@@ -254,27 +257,27 @@ function forceGraph(diseases) {
 		.attr("height", height + margin.top + margin.bottom);
 
 	var force = d3.layout.force()
-			.gravity(0.03)
-			.distance(150)
-			.charge(-150)
-			.linkStrength(0.1)
-			.size([width, height]);
+		.gravity(0.03)
+		.distance(150)
+		.charge(-150)
+		.linkStrength(0.1)
+		.size([width, height]);
 
 	force
-			.nodes(nodes)
-			.links(links)
-			.start();
+		.nodes(nodes)
+		.links(links)
+		.start();
 
 	var link = svg.selectAll(".link")
-	      .data(links)
-	    	.enter().append("line")
-	      .attr("class", "link");
+		.data(links)
+		.enter().append("line")
+		.attr("class", "link");
 
 	var node = svg.selectAll(".node")
-	      .data(nodes)
-	    	.enter().append("g")
-	      .attr("class", "node")
-	      .call(force.drag);
+	    .data(nodes)
+	    .enter().append("g")
+	    .attr("class", "node")
+	    .call(force.drag);
 
 	node.append("circle")
 			.attr("r", function(d){
@@ -282,30 +285,63 @@ function forceGraph(diseases) {
 				else if (d.type == "uniquePhenotype" || d.type == "commonPhenotype") {return 5;}})
 			.attr("fill", function(d){
 				if (d.type == "disease"){
-					return "#de2b2b";}
+					return colors.disease;
+				}
 				else if (d.type == "uniquePhenotype"){
-					return "#3d7de8";}
+					return colors.unique;
+				}
 				else if (d.type == "commonPhenotype"){
 					if (d.diseases.length == Object.keys(diseases).length) {
-						return "#b16cf4";
+						return colors.maxCommon;
 					}
 					else {
-						return "#50e83d";
+						return colors.common;
 					}
 				}});
 
 	node.append("text")
-      .attr("dx", 12)
-      .attr("dy", ".35em")
-			.attr("fill", "#383838")
-      .text(function(d) { return d.name; });
+		.attr("dx", 12)
+		.attr("dy", ".35em")
+		.attr("fill", nodeColor)
+		.text(function(d) { return d.name; });
 
- force.on("tick", function() {
-  link.attr("x1", function(d) { return d.source.x; })
-      .attr("y1", function(d) { return d.source.y; })
-      .attr("x2", function(d) { return d.target.x; })
-      .attr("y2", function(d) { return d.target.y; });
-
+	force.on("tick", function() {
+		link.attr("x1", function(d) { return d.source.x; })
+		  .attr("y1", function(d) { return d.source.y; })
+		  .attr("x2", function(d) { return d.target.x; })
+		  .attr("y2", function(d) { return d.target.y; });
 		node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
-			});
+	});
+
+	var legendData = [
+		{name: "Disease",  type: "disease"},
+		{name: "Unique phenotype",  type: "unique"},
+		{name: "Shared phenotype",  type: "common"},
+		{name: "Maximally shared phenotype",  type: "maxCommon"}
+	];
+
+	var legend = svg.append("g")
+		.selectAll("g")
+		.data(legendData)
+		.enter()
+		.append('g')
+		.attr('class', 'legend')
+		.attr('transform', function(d, i) {
+			var x = 15;
+			var y = (i + 1) * 20;
+			return 'translate(' + x + ',' + y + ')';
+		});
+
+	legend.append('circle')
+		.attr('r', 5)
+		.style('fill', function(d){
+			return colors[d.type];
+		})
+		.style('stroke', 'black');
+
+	legend.append('text')
+		.attr('x', 10)
+		.attr('y', 5)
+		.attr("fill", nodeColor)
+		.text(function(d) {return d.name; });
 }
