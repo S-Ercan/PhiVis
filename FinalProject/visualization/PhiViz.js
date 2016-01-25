@@ -190,10 +190,9 @@ function stackBars(diseases) {
         .attr("x", (width / 2))
         .attr("y", (margin.top / 2) - 35)
         .attr("text-anchor", "middle")
-				.attr("fill", "#e8e7e7")
-        .style("font-size", "16px")
-        .style("text-decoration", "underline")
-        .text("Genes by disease");
+		.attr("fill", "#e8e7e7")
+        .style("font-size", "18px")
+        .text("Gene distribution across diseases");
 
 	var state = svg.selectAll(".gene")
 		.data(data)
@@ -254,7 +253,16 @@ function forceGraph(diseases) {
 
 	svg = d3.select("#graphVis").append("svg")
 		.attr("width", width + margin.left + margin.right)
-		.attr("height", height + margin.top + margin.bottom);
+		.attr("height", height + margin.top + margin.bottom)
+		.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+	svg.append("text")
+        .attr("x", (width / 2))
+        .attr("y", (margin.top / 2) - 35)
+        .attr("text-anchor", "middle")
+		.attr("fill", "#e8e7e7")
+        .style("font-size", "18px")
+        .text("Phenotype distribution across diseases");
 
 	var force = d3.layout.force()
 		.gravity(0.03)
@@ -327,7 +335,7 @@ function forceGraph(diseases) {
 		.append('g')
 		.attr('class', 'legend')
 		.attr('transform', function(d, i) {
-			var x = 15;
+			var x = 0;
 			var y = (i + 1) * 20;
 			return 'translate(' + x + ',' + y + ')';
 		});
