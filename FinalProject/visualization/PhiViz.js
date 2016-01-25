@@ -70,7 +70,7 @@ loadJSON(function(response)
 		var ms = $('#overview').magicSuggest({
 			allowFreeEntries: false,
 			data: Object.keys(diseases),
-			placeholder: 'Diseases...'
+			placeholder: 'Search diseases...'
 		});
 
 		$(ms).on('selectionchange', function(e, m, records) {
