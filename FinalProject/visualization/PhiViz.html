@@ -21,6 +21,26 @@
   <body>
 
     <div id="mainMenu">
+	
+		<div id="info">
+			<h2>
+				PHI-base data visualization tool
+			</h2>
+			<p>
+				PHI-base is a database containing genetic information about pathogen-host interactions.
+				This page provides two tools to visualize parts of this dataset.
+				The stacked bar chart shows which genes are relevant for a set of diseases,
+				and the force-directed graph shows what phenotypical effects effects are caused by these diseases.
+			</p>
+			<p>Usage:</p>
+			<ul>
+				<li>Select one or more diseases from the 'All diseases' drop-down menu</li>
+				<li>Click 'Show stacked bar chart' for the gene distribution across diseases</li>
+				<li>Click 'Show force-directed graph' for the mutant phenotype distribution across diseases</li>
+			</ul>
+		</div>
+		
+		<hr />
 
 		<span id="allDiseases">All diseases</span>
   		<div id="overview" class="form-control">
@@ -29,9 +49,10 @@
   		<div id="selectedOverview">
   		</div>
 
-  		<div>
-  			<button id="stackBarsButton">Stacked bar chart</button>
-  			<button id="forceGraphButton">Force-directed graph</button>
+  		<div id="buttons">
+  			<button id="stackBarsButton" class="visButton">Show stacked bar chart</button>
+			<br />
+  			<button id="forceGraphButton" class="visButton">Show force-directed graph</button>
   		</div>
 
     </div>

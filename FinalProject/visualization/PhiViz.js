@@ -134,7 +134,7 @@ function stackBars(diseases) {
 		.attr('class', 'd3-tip')
 		.offset([25, 0])
 		.html(function(d) {
-			return "<strong>Gene:</strong> <span style='color:red'>" + d.gene + "</span>";
+			return "<strong>Gene:</strong> <span class='tooltip' style='color:red'>" + d.gene + "</span>";
 		});
 
 	if (svg)
