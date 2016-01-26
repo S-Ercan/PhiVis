@@ -236,11 +236,13 @@ function stackBars(diseases) {
 		.data(function(d) { return d.genes; })
 		.enter().append("rect")
 		.attr("width", x.rangeBand())
+		.on('mouseover', tip.show)
+		.on('mouseout', tip.hide)
+		.transition()
+		.delay(function(d, i) { return i * 2; })
 		.attr("y", function(d) { return y(d.y1); })
 		.attr("height", function(d) { return y(d.y0) - y(d.y1); })
-		.style("fill", function(d) { return color(d.gene); })
-		.on('mouseover', tip.show)
-		.on('mouseout', tip.hide);
+		.style("fill", function(d) { return color(d.gene); });
 }
 
 /**
