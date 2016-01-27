@@ -311,9 +311,9 @@ function forceGraph(diseases) {
 
 	// Initialize graph
 	var force = d3.layout.force()
-		.gravity(0.03)
+		.gravity(0.05)
 		.distance(150)
-		.charge(-150)
+		.charge(-200)
 		.linkStrength(0.1)
 		.size([width, height]);
 	force
